@@ -10,7 +10,7 @@
 ![Unit Tests](https://github.com/articulate-laravel/concise/actions/workflows/tests.yml/badge.svg)
 ![Static Analysis](https://github.com/articulate-laravel/concise/actions/workflows/static-analysis.yml/badge.svg)
 
-# Articulate: Concise for Laravel
+# Articulate: Concise
 ### A super lightweight data mapper ORM for Laravel
 
 This package is currently under development.
