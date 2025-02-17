@@ -79,7 +79,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Articulate\\ArticulateServiceProvider"
+                "Articulate\\Concise\\ConciseServiceProvider"
             ],
             "facades": []
         }

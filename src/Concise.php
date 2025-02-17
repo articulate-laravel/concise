@@ -60,6 +60,16 @@ final class Concise
     }
 
     /**
+     * Get all component mappers
+     *
+     * @return array<class-string, \Articulate\Concise\Contracts\Mapper<*>>
+     */
+    public function getComponentMappers(): array
+    {
+        return $this->componentMappers;
+    }
+
+    /**
      * Registers the provided Mapper instance.
      *
      * @template ObjType of object
