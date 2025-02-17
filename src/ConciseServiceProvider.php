@@ -18,13 +18,22 @@ class ConciseServiceProvider extends ServiceProvider
         $this->booted($this->registerRepositories(...));
     }
 
+    /**
+     * @param \Articulate\Concise\Concise $concise
+     *
+     * @return void
+     */
     protected function registerRepositories(Concise $concise): void
     {
-        foreach ($concise->getEntityMappers() as $mapper) {
+        /**
+         * @var class-string $entity
+         * @var \Articulate\Concise\Contracts\EntityMapper<*> $mapper
+         */
+        foreach ($concise->getEntityMappers() as $entity => $mapper) {
             $repo = $mapper->repository();
 
             if ($repo !== null) {
-                $this->app->bind($repo, fn () => $concise->repository($mapper->getClass()));
+                $this->app->bind($repo, fn () => $concise->repository($entity));
             }
         }
     }

@@ -5,7 +5,6 @@ namespace Articulate\Concise;
 
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\Repository;
-use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\DatabaseManager;
 use InvalidArgumentException;
@@ -226,8 +225,8 @@ final class Concise
         $repository = $this->repositories[$class] ?? null;
 
         if ($repository !== null) {
-            return $repository;
             /** @phpstan-ignore return.type */
+            return $repository;
         }
 
         $repositoryClass = $mapper->repository();

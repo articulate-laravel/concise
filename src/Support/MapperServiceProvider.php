@@ -8,6 +8,9 @@ use Illuminate\Support\ServiceProvider;
 
 abstract class MapperServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array<class-string, class-string<\Articulate\Concise\Contracts\EntityMapper<*>>>
+     */
     protected array $mappers = [];
 
     public function register(): void

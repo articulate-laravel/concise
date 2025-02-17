@@ -107,6 +107,16 @@ abstract class BaseRepository implements Repository
      */
     protected function hydrateMany(Collection $collection): Collection
     {
-        return $collection->map(fn (array $data) => $this->hydrate($data));
+        $newCollection = new Collection();
+
+        foreach ($collection as $data) {
+            $entity = $this->hydrate($data);
+
+            if ($entity !== null) {
+                $newCollection->push($entity);
+            }
+        }
+
+        return $newCollection;
     }
 }
