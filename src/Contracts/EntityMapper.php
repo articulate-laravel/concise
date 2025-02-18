@@ -28,6 +28,13 @@ interface EntityMapper extends Mapper
     public function repository(): ?string;
 
     /**
+     * Get the entity table name.
+     *
+     * @return string
+     */
+    public function table(): string;
+
+    /**
      * Get the identity from the provided data.
      *
      * @param array<string, mixed>|object             $data

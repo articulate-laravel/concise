@@ -16,7 +16,7 @@ final class TimestampsMapper implements Mapper
      *
      * @return class-string<\App\Components\Timestamps>
      */
-    public function getClass(): string
+    public function class(): string
     {
         return Timestamps::class;
     }

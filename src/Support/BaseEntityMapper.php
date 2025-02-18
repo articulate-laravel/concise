@@ -5,6 +5,7 @@ namespace Articulate\Concise\Support;
 
 use Articulate\Concise\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Stringable;
 
@@ -43,6 +44,16 @@ abstract class BaseEntityMapper implements EntityMapper
     public function repository(): ?string
     {
         return null;
+    }
+
+    /**
+     * Get the entity table name.
+     *
+     * @return string
+     */
+    public function table(): string
+    {
+        return Str::snake(Str::pluralStudly(class_basename($this->class())));
     }
 
     /**

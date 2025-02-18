@@ -20,7 +20,7 @@ final class UserMapper extends BaseEntityMapper
      *
      * @return class-string<\App\Entities\User>
      */
-    public function getClass(): string
+    public function class(): string
     {
         return User::class;
     }
@@ -34,7 +34,6 @@ final class UserMapper extends BaseEntityMapper
     {
         return UserRepository::class;
     }
-
 
     /**
      * Converts the given array of data into an object.

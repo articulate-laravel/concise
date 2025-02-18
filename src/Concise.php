@@ -90,7 +90,7 @@ final class Concise
         $mapper = $this->app->make($mapperClass);
 
         if ($mapper instanceof EntityMapper) {
-            $this->entityMappers[$mapper->getClass()] = $mapper;
+            $this->entityMappers[$mapper->class()] = $mapper;
         } else {
             $this->componentMappers[$mapper->getClass()] = $mapper;
         }
@@ -142,7 +142,7 @@ final class Concise
         $identity = $mapper->identity($data);
 
         // Retrieve an existing entity if one does exist
-        $existing = $this->identities->get($mapper->getClass(), $identity);
+        $existing = $this->identities->get($mapper->class(), $identity);
 
         // If it does exist, return it instead
         if ($existing !== null) {
@@ -153,7 +153,7 @@ final class Concise
         $entity = $mapper->toObject($data);
 
         // And then map its identity
-        $this->identities->add($entity, $identity, $mapper->getClass());
+        $this->identities->add($entity, $identity, $mapper->class());
 
         return $entity;
     }

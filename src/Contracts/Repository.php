@@ -22,4 +22,15 @@ interface Repository
         EntityMapper $mapper,
         Connection   $connection
     );
+
+    /**
+     * Save the given entity.
+     *
+     * @param object             $entity The entity to be saved.
+     *
+     * @phpstan-param EntityType $entity
+     *
+     * @return bool Returns true if the object is successfully saved, false otherwise.
+     */
+    public function save(object $entity): bool;
 }

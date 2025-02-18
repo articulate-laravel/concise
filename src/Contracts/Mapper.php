@@ -17,7 +17,7 @@ interface Mapper
      *
      * @return class-string<ObjType>
      */
-    public function getClass(): string;
+    public function class(): string;
 
     /**
      * Converts the given array of data into an object.

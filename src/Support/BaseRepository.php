@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Articulate\Concise\Support;
 
-use App\Models\User;
 use Articulate\Concise\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\Repository;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -78,7 +78,7 @@ abstract class BaseRepository implements Repository
      */
     protected function query(): Builder
     {
-        return $this->connection()->query();
+        return $this->connection()->query()->from($this->mapper()->table());
     }
 
     /**
@@ -119,5 +119,36 @@ abstract class BaseRepository implements Repository
         }
 
         return $newCollection;
+    }
+
+    /**
+     * Save the given entity.
+     *
+     * @param object             $entity The entity to be saved.
+     *
+     * @phpstan-param EntityType $entity
+     *
+     * @return bool Returns true if the object is successfully saved, false otherwise.
+     */
+    public function save(object $entity): bool
+    {
+        $identity = $this->mapper()->identity($entity);
+        $data     = $this->mapper()->toData($entity);
+
+        if ($identity === null) {
+            $id = $this->query()->insertGetId($data);
+
+            if (method_exists($entity, 'setId')) {
+                $entity->setId($id);
+            } else if (property_exists($entity, 'id')) {
+                $entity->id = $id;
+            }
+
+            return true;
+        }
+
+        return $this->query()
+                    ->where('id', $identity)
+                    ->update(Arr::except($data, ['id'])) > 0;
     }
 }

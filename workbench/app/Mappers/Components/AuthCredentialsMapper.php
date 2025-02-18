@@ -16,7 +16,7 @@ final class AuthCredentialsMapper implements Mapper
      *
      * @return class-string<\App\Components\AuthCredentials>
      */
-    public function getClass(): string
+    public function class(): string
     {
         return AuthCredentials::class;
     }
