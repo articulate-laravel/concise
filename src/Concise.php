@@ -87,12 +87,13 @@ final class Concise
      */
     public function register(string $mapperClass): self
     {
+        /** @var \Articulate\Concise\Contracts\Mapper<ObjType> $mapper */
         $mapper = $this->app->make($mapperClass);
 
         if ($mapper instanceof EntityMapper) {
             $this->entityMappers[$mapper->class()] = $mapper;
         } else {
-            $this->componentMappers[$mapper->getClass()] = $mapper;
+            $this->componentMappers[$mapper->class()] = $mapper;
         }
 
         return $this;
