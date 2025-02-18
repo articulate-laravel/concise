@@ -10,6 +10,7 @@ use App\Mappers\Components\AuthCredentialsMapper;
 use App\Mappers\Components\TimestampsMapper;
 use App\Mappers\Entities\UserMapper;
 use App\Providers\MapperServiceProvider;
+use App\Repositories\UserRepository;
 use Articulate\Concise\Concise;
 use Articulate\Concise\ConciseServiceProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -57,5 +58,16 @@ class ConciseTest extends TestCase
         $this->assertArrayHasKey(Timestamps::class, $componentMappers);
         $this->assertInstanceOf(AuthCredentialsMapper::class, $componentMappers[AuthCredentials::class]);
         $this->assertInstanceOf(TimestampsMapper::class, $componentMappers[Timestamps::class]);
+    }
+
+    #[Test]
+    public function bindsEntityRepositoriesCorrectly(): void
+    {
+        $this->assertTrue($this->app->providerIsLoaded(MapperServiceProvider::class));
+
+        $concise = $this->app->make(Concise::class);
+
+        $this->assertTrue($this->app->bound(UserRepository::class));
+        $this->assertSame($this->app->make(UserRepository::class), $concise->repository(User::class));
     }
 }

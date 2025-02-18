@@ -244,10 +244,10 @@ final class Concise
          *
          * @phpstan-ignore argument.type
          */
-        return $this->repositories[$class] = $this->app->make($repositoryClass, [
-            'concise'    => $this,
-            'mapper'     => $mapper,
-            'connection' => $this->databases->connection($mapper->connection()),
-        ]);
+        return $this->repositories[$class] = new $repositoryClass(
+            concise   : $this,
+            mapper    : $mapper,
+            connection: $this->databases->connection($mapper->connection()),
+        );
     }
 }

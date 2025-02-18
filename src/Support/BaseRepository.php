@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Articulate\Concise\Support;
 
+use App\Models\User;
 use Articulate\Concise\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\Repository;
@@ -40,7 +41,7 @@ abstract class BaseRepository implements Repository
     public function __construct(
         Concise      $concise,
         EntityMapper $mapper,
-        Connection   $connection
+        Connection   $connection,
     )
     {
         $this->concise    = $concise;
