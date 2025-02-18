@@ -52,13 +52,13 @@ abstract class BaseEntityMapper implements EntityMapper
      *
      * @phpstan-param array<string, mixed>|EntityType $data
      *
-     * @return int|string
+     * @return int|string|null
      */
-    public function identity(object|array $data): int|string
+    public function identity(object|array $data): int|string|null
     {
         if (is_object($data)) {
             if (method_exists($data, 'hasId') && ! $data->hasId()) {
-                throw new RuntimeException('Cannot get identity from an entity without an ID');
+                return null;
             }
 
             if (property_exists($data, 'id')) {
@@ -77,7 +77,7 @@ abstract class BaseEntityMapper implements EntityMapper
         }
 
         if (! isset($data['id'])) {
-            throw new RuntimeException('Cannot get identity from an entity without an ID');
+            return null;
         }
 
         assert(is_string($data['id']) || is_int($data['id']), 'The ID must be an int or string');

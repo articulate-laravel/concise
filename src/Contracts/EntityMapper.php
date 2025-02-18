@@ -34,7 +34,7 @@ interface EntityMapper extends Mapper
      *
      * @phpstan-param array<string, mixed>|EntityType $data
      *
-     * @return int|string
+     * @return int|string|null
      */
-    public function identity(array|object $data): int|string;
+    public function identity(array|object $data): int|string|null;
 }
