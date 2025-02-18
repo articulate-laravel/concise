@@ -90,12 +90,12 @@ trait SupportsAuth
     {
         $credentials = array_filter(
             $credentials,
-            fn ($key) => ! str_contains($key, 'password'),
+            static fn ($key) => ! str_contains($key, 'password'),
             ARRAY_FILTER_USE_KEY
         );
 
         if (empty($credentials)) {
-            return;
+            return null;
         }
 
         // First we will add each credential element to the query as a where clause.

@@ -142,6 +142,10 @@ final class Concise
         // Get the identity from the data
         $identity = $mapper->identity($data);
 
+        if ($identity === null) {
+            throw new InvalidArgumentException('No identity could be found in the provided data.');
+        }
+
         // Retrieve an existing entity if one does exist
         $existing = $this->identities->get($mapper->class(), $identity);
 
@@ -237,14 +241,7 @@ final class Concise
         }
 
         $repositoryClass = $mapper->repository();
-
-        /**
-         * This has to be here because Application::make() expects a 'string',
-         * not a 'class-string', which is...well, yeah, you know exactly what it
-         * is.
-         *
-         * @phpstan-ignore argument.type
-         */
+        
         return $this->repositories[$class] = new $repositoryClass(
             concise   : $this,
             mapper    : $mapper,

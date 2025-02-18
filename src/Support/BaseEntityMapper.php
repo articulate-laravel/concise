@@ -64,6 +64,8 @@ abstract class BaseEntityMapper implements EntityMapper
      * @phpstan-param array<string, mixed>|EntityType $data
      *
      * @return int|string|null
+     *
+     * @TODO: Think about a better implementation for this
      */
     public function identity(object|array $data): int|string|null
     {

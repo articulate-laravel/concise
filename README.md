@@ -1,4 +1,4 @@
-<img src="articulate.png">
+<img src="articulate.png" width="100%">
 
 ![Packagist Version](https://img.shields.io/packagist/v/articulate/concise)
 ![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/articulate/concise)
@@ -11,7 +11,11 @@
 ![Static Analysis](https://github.com/articulate-laravel/concise/actions/workflows/static-analysis.yml/badge.svg)
 
 # Articulate: Concise
-### A super lightweight data mapper ORM for Laravel
+Articulate: Concise is a super lightweight data mapper ORM for Laravel.
+It exists as a package entirely because I wondered how lightweight of a solution I can build, that gives me the 
+benefit of a data mapper ORM, without using a full ORM.
 
-This package is currently under development.
-Check back in the future for updates.
+Concise is extensible and flexible, and will most likely serve as the basis for Articulate in the future, but it comes
+with many sensible defaults, and a sprinkle of magic that'll simplify using it based on certain conventions.
+It also comes with a driver for Laravel's auth functionality,
+and route entity binding (route model binding but for concise entities).

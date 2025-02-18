@@ -47,7 +47,7 @@ interface AuthRepository extends Repository
     /**
      * Find an identity by its credentials
      *
-     * @param array $credentials
+     * @param array<string, mixed> $credentials
      *
      * @return object|null
      *
