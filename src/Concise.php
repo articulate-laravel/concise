@@ -19,6 +19,11 @@ final class Concise
     private Application $app;
 
     /**
+     * @var \Illuminate\Database\DatabaseManager
+     */
+    private DatabaseManager $databases;
+
+    /**
      * @var \Articulate\Concise\IdentityMap
      */
     private IdentityMap $identities;
@@ -42,10 +47,11 @@ final class Concise
      */
     private array $repositories = [];
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, DatabaseManager $databases)
     {
         $this->app        = $app;
         $this->identities = new IdentityMap();
+        $this->databases  = $databases;
     }
 
     /**
@@ -231,10 +237,17 @@ final class Concise
 
         $repositoryClass = $mapper->repository();
 
-        return $this->repositories[$class] = new $repositoryClass(
-            $this,
-            $mapper,
-            $this->app->make(DatabaseManager::class)->connection($mapper->connection())
-        );
+        /**
+         * This has to be here because Application::make() expects a 'string',
+         * not a 'class-string', which is...well, yeah, you know exactly what it
+         * is.
+         *
+         * @phpstan-ignore argument.type
+         */
+        return $this->repositories[$class] = $this->app->make($repositoryClass, [
+            'concise'    => $this,
+            'mapper'     => $mapper,
+            'connection' => $this->databases->connection($mapper->connection()),
+        ]);
     }
 }

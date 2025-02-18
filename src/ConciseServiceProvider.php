@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Articulate\Concise;
 
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 
 class ConciseServiceProvider extends ServiceProvider
@@ -11,7 +12,10 @@ class ConciseServiceProvider extends ServiceProvider
     {
         // Register the Concise class
         $this->app->singleton(Concise::class, function () {
-            return new Concise($this->app);
+            return new Concise(
+                $this->app,
+                $this->app->make(DatabaseManager::class),
+            );
         });
 
         // Register the mappers' repositories
