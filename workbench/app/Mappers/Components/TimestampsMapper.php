@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Mappers\Components;
 
 use App\Components\Timestamps;
-use Articulate\Concise\Contracts\Mapper;
+use OLD\Contracts\Mapper;
 
 /**
- * @implements \Articulate\Concise\Contracts\Mapper<\App\Components\Timestamps>
+ * @implements OLD\Contracts\Mapper<\App\Components\Timestamps>
  */
 final class TimestampsMapper implements Mapper
 {

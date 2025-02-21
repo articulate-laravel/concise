@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use Articulate\Concise\Concerns\SupportsAuth;
-use Articulate\Concise\Concerns\UsesTransactions;
-use Articulate\Concise\Contracts\AuthRepository;
-use Articulate\Concise\Support\BaseRepository;
+use OLD\Concerns\SupportsAuth;
+use OLD\Concerns\UsesTransactions;
+use OLD\Contracts\AuthRepository;
+use OLD\Support\BaseRepository;
 
 /**
- * @extends \Articulate\Concise\Support\BaseRepository<\App\Entities\User>
+ * @extends OLD\Support\BaseRepository<\App\Entities\User>
  */
 final class UserRepository extends BaseRepository implements AuthRepository
 {

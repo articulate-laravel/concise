@@ -7,11 +7,11 @@ use App\Components\AuthCredentials;
 use App\Components\Timestamps;
 use App\Entities\User;
 use App\Repositories\UserRepository;
-use Articulate\Concise\Support\BaseEntityMapper;
 use Illuminate\Support\Arr;
+use OLD\Support\BaseEntityMapper;
 
 /**
- * @extends \Articulate\Concise\Support\BaseEntityMapper<\App\Entities\User>
+ * @extends OLD\Support\BaseEntityMapper<\App\Entities\User>
  */
 final class UserMapper extends BaseEntityMapper
 {

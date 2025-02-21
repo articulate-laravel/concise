@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Mappers;
-use Articulate\Concise\Support\MapperServiceProvider as BaseMapperServiceProvider;
+use OLD\Support\MapperServiceProvider as BaseMapperServiceProvider;
 
 class MapperServiceProvider extends BaseMapperServiceProvider
 {

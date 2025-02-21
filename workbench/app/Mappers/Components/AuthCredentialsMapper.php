@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Mappers\Components;
 
 use App\Components\AuthCredentials;
-use Articulate\Concise\Contracts\Mapper;
+use OLD\Contracts\Mapper;
 
 /**
- * @implements \Articulate\Concise\Contracts\Mapper<\App\Components\AuthCredentials>
+ * @implements OLD\Contracts\Mapper<\App\Components\AuthCredentials>
  */
 final class AuthCredentialsMapper implements Mapper
 {
