@@ -6,7 +6,12 @@ namespace Articulate\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\Mapper;
 use Articulate\Concise\Contracts\Repository;
+use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Str;
+use ReflectionClass;
+use RuntimeException;
+use Throwable;
 
 final class Concise
 {
@@ -85,17 +90,17 @@ final class Concise
      *
      * @param class-string<EntityObject> $class
      *
-     * @return \Articulate\Concise\Contracts\Repository<EntityObject>|null
+     * @return \Articulate\Concise\Contracts\Repository<EntityObject>
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function repository(string $class): ?Repository
+    public function repository(string $class): Repository
     {
         /** @var \Articulate\Concise\Contracts\EntityMapper<EntityObject>|null $mapper */
         $mapper = $this->entity($class);
 
         if ($mapper === null) {
-            return null;
+            throw new RuntimeException('No entity mapper registered for class [' . $class . ']');
         }
 
         $repository = $mapper->repository();
@@ -107,9 +112,76 @@ final class Concise
             );
         }
 
-        return $this->app->make($repository, [
+        /** @var \Articulate\Concise\Contracts\Repository<EntityObject> $instance */
+        $instance = $this->app->make($repository, [
             'mapper'     => $mapper,
             'connection' => $this->app->make('db')->connection($mapper->connection()),
         ]);
+
+        return $instance;
+    }
+
+    /**
+     * Get a lazy entity instance.
+     *
+     * @template EntityObject of object
+     *
+     * @param class-string<EntityObject> $class
+     * @param string|int                 $identity
+     * @param array<string, mixed>       $data
+     *
+     * @return object|null
+     *
+     * @phpstan-return EntityObject|null
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function lazy(string $class, string|int $identity, array $data = []): ?object
+    {
+        /** @var \Articulate\Concise\Contracts\EntityMapper<EntityObject>|null $mapper */
+        $mapper = $this->entity($class);
+
+        if ($mapper === null) {
+            return null;
+        }
+
+        $repository = $this->repository($class);
+
+        try {
+            $reflector = new ReflectionClass($class);
+            $lazy      = $reflector->newLazyProxy(
+            /**
+             * @phpstan-param EntityObject $proxy
+             */
+                function (object $proxy) use ($repository, $identity, $mapper) {
+                    /** @var EntityObject|null $entity */
+                    $entity = $repository->getOne(Criterion::forIdentifier($identity));
+
+                    if ($entity === null) {
+                        throw new RecordsNotFoundException('No results for entity [' . $mapper->class() . ']');
+                    }
+
+                    return $entity;
+                }
+            );
+        } catch (Throwable $e) {
+            report($e);
+
+            return null;
+        }
+
+        foreach ($data as $property => $value) {
+            if ($reflector->hasProperty($property)) {
+                $reflector->getProperty($property)->setRawValueWithoutLazyInitialization($lazy, $value);
+            } else {
+                $property = Str::studly($property);
+
+                if ($reflector->hasProperty($property)) {
+                    $reflector->getProperty($property)->setRawValueWithoutLazyInitialization($lazy, $value);
+                }
+            }
+        }
+
+        return $lazy;
     }
 }

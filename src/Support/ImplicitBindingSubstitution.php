@@ -6,7 +6,6 @@ namespace Articulate\Concise\Support;
 use Articulate\Concise\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\RoutableRepository;
-use Articulate\Concise\Criteria\ForIdentifier;
 use Articulate\Concise\Criterion;
 use Closure;
 use Illuminate\Contracts\Container\Container;
@@ -48,19 +47,28 @@ final class ImplicitBindingSubstitution
         // First things first, we run the default implicit binding
         $default();
 
-        // Get the route parameters
+        /**
+         * Get the route parameters
+         *
+         * @var array<string, mixed>
+         */
         $parameters = $route->parameters();
 
-        // Get the parameters for the route handler
+        /**
+         * Get the parameters for the route handler
+         *
+         * @var array<\ReflectionParameter> $handlerParameters
+         */
         $handlerParameters = $route->signatureParameters();
 
         foreach ($handlerParameters as $parameter) {
-            $parameterName = $this->getParameterName($parameter->getName(), $route->parameters());
+            $parameterName = $this->getParameterName($parameter->getName(), $parameters);
 
             if ($parameterName === null) {
                 continue;
             }
 
+            /** @var string $parameterValue */
             $parameterValue = $parameters[$parameterName];
             $parameterType  = Reflector::getParameterClassName($parameter);
 

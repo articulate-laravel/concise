@@ -5,8 +5,6 @@ namespace Articulate\Concise;
 
 use Articulate\Concise\Contracts\Criteria;
 use Articulate\Concise\Contracts\EntityMapper;
-use Articulate\Concise\Criteria\ForIdentifier;
-use Articulate\Concise\Criteria\WhereColumn;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Collection;
@@ -15,6 +13,7 @@ use Illuminate\Support\Collection;
  * @template EntityObject of object
  *
  * @implements \Articulate\Concise\Contracts\Repository<EntityObject>
+ * @implements \Articulate\Concise\Contracts\RoutableRepository<EntityObject>
  */
 final class EntityRepository implements Contracts\Repository, Contracts\RoutableRepository
 {
