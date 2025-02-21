@@ -11,13 +11,17 @@ use App\Mappers\Components\TimestampsMapper;
 use App\Mappers\Entities\UserMapper;
 use Articulate\Concise\Concise;
 use Articulate\Concise\EntityRepository;
+use Articulate\Concise\Support\MapperDiscovery;
 use InvalidArgumentException;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use stdClass;
 
 class ConciseTest extends TestCase
 {
+    use WithWorkbench;
+
     #[Test]
     public function canManuallyRegisterEntityMappers(): void
     {
