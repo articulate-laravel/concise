@@ -6,6 +6,7 @@ namespace Articulate\Concise;
 use Articulate\Concise\Contracts\EntityMapper;
 use Articulate\Concise\Contracts\Mapper;
 use Articulate\Concise\Contracts\Repository;
+use Closure;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
@@ -153,50 +154,49 @@ final class Concise
      *
      * @template EntityObject of object
      *
-     * @param class-string<EntityObject> $class
-     * @param string|int                 $identity
-     * @param array<string, mixed>       $data
+     * @param class-string<EntityObject>     $class
+     * @param string|int                     $identity
+     * @param array<string, mixed>           $data
+     * @param (\Closure():EntityObject)|null $factory
      *
-     * @return object|null
+     * @return object
      *
-     * @phpstan-return EntityObject|null
+     * @phpstan-return EntityObject
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function lazy(string $class, string|int $identity, array $data = []): ?object
+    public function lazy(string $class, string|int $identity, array $data = [], ?Closure $factory = null): object
     {
         /** @var \Articulate\Concise\Contracts\EntityMapper<EntityObject>|null $mapper */
         $mapper = $this->entity($class);
 
         if ($mapper === null) {
-            return null;
+            throw new RuntimeException('No entity mapper registered for class [' . $class . ']');
         }
 
         $repository = $this->repository($class);
 
         try {
             $reflector = new ReflectionClass($class);
-            $lazy      = $reflector->newLazyProxy(
-            /**
-             * @phpstan-param EntityObject $proxy
-             */
-                function (object $proxy) use ($repository, $identity, $mapper) {
-                    /** @var EntityObject|null $entity */
-                    $entity = $repository->getOne(Criterion::forIdentifier($identity));
 
-                    if ($entity === null) {
-                        throw new RecordsNotFoundException('No results for entity [' . $mapper->class() . ']');
-                    }
+            $factory   ??= static function (object $proxy) use ($repository, $identity, $mapper) {
+                /** @var EntityObject|null $entity */
+                $entity = $repository->getOne(Criterion::forIdentifier($identity));
 
-                    return $entity;
+                if ($entity === null) {
+                    throw new RecordsNotFoundException('No results for entity [' . $mapper->class() . ']');
                 }
-            );
+
+                return $entity;
+            };
+
+            $lazy      = $reflector->newLazyProxy($factory);
 
             $reflector->getProperty($mapper->identity())->setRawValueWithoutLazyInitialization($lazy, $identity);
         } catch (Throwable $e) {
             report($e);
 
-            return null;
+            throw new RuntimeException('Unable to create lazy proxy for entity [' . $class . ']');
         }
 
         foreach ($data as $property => $value) {

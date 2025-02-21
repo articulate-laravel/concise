@@ -19,6 +19,18 @@ use Illuminate\Support\Str;
  */
 final class ImplicitBindingSubstitution
 {
+    private static bool $lazyInjection = false;
+
+    public static function lazilyInject(): void
+    {
+        self::$lazyInjection = true;
+    }
+
+    public static function eagerlyInject(): void
+    {
+        self::$lazyInjection = false;
+    }
+
     /**
      * @var \Articulate\Concise\Concise
      */
@@ -131,18 +143,26 @@ final class ImplicitBindingSubstitution
         /** @var \Articulate\Concise\Contracts\Repository<EntityObject> $repository */
         $repository = $this->concise->repository($mapper->class());
 
-        if ($repository instanceof RoutableRepository) {
-            $entity = $repository->getOneForRouting($value, $bindingField);
-        } else {
-            $entity = $repository->getOne(Criterion::forIdentifier($value));
+        $resolver = static function () use ($repository, $value, $bindingField, $mapper) {
+            if ($repository instanceof RoutableRepository) {
+                $entity = $repository->getOneForRouting($value, $bindingField);
+            } else {
+                $entity = $repository->getOne(Criterion::forIdentifier($value));
+            }
+
+            /** @var EntityObject|null $entity */
+
+            if ($entity === null) {
+                throw new RecordsNotFoundException('No results for entity [' . $mapper->class() . ']');
+            }
+
+            return $entity;
+        };
+
+        if (self::$lazyInjection === true) {
+            return $this->concise->lazy($mapper->class(), $value, factory: $resolver);
         }
 
-        /** @var EntityObject|null $entity */
-
-        if ($entity === null) {
-            throw new RecordsNotFoundException('No results for entity [' . $mapper->class() . ']');
-        }
-
-        return $entity;
+        return $resolver();
     }
 }
