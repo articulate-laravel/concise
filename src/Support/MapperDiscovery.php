@@ -104,7 +104,7 @@ final class MapperDiscovery
     }
 
     /**
-     * @return array<class-string<\Articulate\Concise\Contracts\Mapper<*>>>
+     * @return array<class-string<\Articulate\Concise\Contracts\Mapper<object>>>
      */
     public static function discover(): array
     {
@@ -125,7 +125,7 @@ final class MapperDiscovery
     /**
      * @param string $path
      * @param string $namespace
-     * @param array<class-string<\Articulate\Concise\Contracts\Mapper<*>>>  $mappers
+     * @param array<class-string<\Articulate\Concise\Contracts\Mapper<object>>>  $mappers
      *
      * @return void
      */
@@ -148,7 +148,7 @@ final class MapperDiscovery
                 continue;
             }
 
-            /** @var class-string<\Articulate\Concise\Contracts\Mapper<*>> $class */
+            /** @var class-string<\Articulate\Concise\Contracts\Mapper<object>> $class */
             $class = $reflector->getName();
 
             $mappers[] = $class;
