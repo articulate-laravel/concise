@@ -6,14 +6,13 @@ namespace App\Mappers\Entities;
 use App\Components\AuthCredentials;
 use App\Components\Timestamps;
 use App\Entities\User;
-use App\Repositories\UserRepository;
+use Articulate\Concise\EntityMapper;
 use Illuminate\Support\Arr;
-use OLD\Support\BaseEntityMapper;
 
 /**
- * @extends OLD\Support\BaseEntityMapper<\App\Entities\User>
+ * @extends \Articulate\Concise\EntityMapper<\App\Entities\User>
  */
-final class UserMapper extends BaseEntityMapper
+final class UserMapper extends EntityMapper
 {
     /**
      * Get the object class.
@@ -23,16 +22,6 @@ final class UserMapper extends BaseEntityMapper
     public function class(): string
     {
         return User::class;
-    }
-
-    /**
-     * Get the repository class name.
-     *
-     * @return class-string<\App\Repositories\UserRepository>|null
-     */
-    public function repository(): ?string
-    {
-        return UserRepository::class;
     }
 
     /**
@@ -51,14 +40,12 @@ final class UserMapper extends BaseEntityMapper
         $user->setId($data['id'])
              ->setName($data['name'])
              ->setAuth(
-                 $this->concise->component(
-                     AuthCredentials::class,
+                 $this->concise->component(AuthCredentials::class)?->toObject(
                      Arr::only($data, ['email', 'password', 'remember_token', 'email_verified_at'])
                  )
              )
              ->setTimestamps(
-                 $this->concise->component(
-                     Timestamps::class,
+                 $this->concise->component(Timestamps::class)?->toObject(
                      Arr::only($data, ['created_at', 'updated_at'])
                  )
              );
@@ -86,8 +73,8 @@ final class UserMapper extends BaseEntityMapper
         }
 
         return array_merge(
-            $this->concise->data($object->getAuth()),
-            $this->concise->data($object->getTimestamps()),
+            $this->concise->component(AuthCredentials::class)?->toData($object->getAuth()),
+            $this->concise->component(Timestamps::class)?->toData($object->getTimestamps()),
             $data
         );
     }

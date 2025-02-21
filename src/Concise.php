@@ -9,6 +9,7 @@ use Articulate\Concise\Contracts\Repository;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use ReflectionClass;
 use RuntimeException;
 use Throwable;
@@ -40,13 +41,22 @@ final class Concise
      *
      * @template MapperObject of object
      *
-     * @param \Articulate\Concise\Contracts\Mapper<MapperObject> $mapper
-     * @param bool                                               $overwrite
+     * @param \Articulate\Concise\Contracts\Mapper<MapperObject>|class-string<\Articulate\Concise\Contracts\Mapper<MapperObject>> $mapper
+     * @param bool                                                                                                                $overwrite
      *
      * @return bool
      */
-    public function register(Mapper $mapper, bool $overwrite = false): bool
+    public function register(Mapper|string $mapper, bool $overwrite = false): bool
     {
+        if (is_string($mapper)) {
+            /** @phpstan-ignore function.alreadyNarrowedType */
+            if (! is_subclass_of($mapper, Mapper::class)) {
+                throw new InvalidArgumentException('Class [' . $mapper . '] is not a valid mapper.');
+            }
+
+            $mapper = new $mapper($this);
+        }
+
         if ($mapper instanceof EntityMapper) {
             if ($overwrite === false && isset($this->entityMappers[$mapper->class()])) {
                 return false;
@@ -79,6 +89,23 @@ final class Concise
     {
         /** @var \Articulate\Concise\Contracts\EntityMapper<EntityObject>|null $mapper */
         $mapper = $this->entityMappers[$class] ?? null;
+
+        return $mapper;
+    }
+
+    /**
+     * Get a registered component mapper for the provided class.
+     *
+     * @template ComponentObject of object
+     *
+     * @param class-string<ComponentObject> $class
+     *
+     * @return \Articulate\Concise\Contracts\Mapper<ComponentObject>|null
+     */
+    public function component(string $class): ?Mapper
+    {
+        /** @var \Articulate\Concise\Contracts\Mapper<ComponentObject>|null $mapper */
+        $mapper = $this->componentMappers[$class] ?? null;
 
         return $mapper;
     }
@@ -164,6 +191,8 @@ final class Concise
                     return $entity;
                 }
             );
+
+            $reflector->getProperty($mapper->identity())->setRawValueWithoutLazyInitialization($lazy, $identity);
         } catch (Throwable $e) {
             report($e);
 
