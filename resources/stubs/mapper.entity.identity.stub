@@ -1,0 +1,9 @@
+    /**
+     * Get the name of the identity field
+     *
+     * @return string
+     */
+    public function identity(): string
+    {
+        return '{{ identity }}';
+    }

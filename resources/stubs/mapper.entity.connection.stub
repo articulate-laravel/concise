@@ -1,0 +1,9 @@
+    /**
+     * Get the connection the entity should use
+     *
+     * @return string|null
+     */
+    public function connection(): ?string
+    {
+        return '{{ connection }}';
+    }

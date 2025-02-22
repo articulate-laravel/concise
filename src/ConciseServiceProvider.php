@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace Articulate\Concise;
 
+use Articulate\Concise\Commands\MakeEntityCommand;
+use Articulate\Concise\Commands\MakeMapperCommand;
 use Articulate\Concise\Support\ImplicitBindingSubstitution;
 use Articulate\Concise\Support\MapperDiscovery;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Events\PublishingStubs;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,5 +33,23 @@ class ConciseServiceProvider extends ServiceProvider
                 $concise->register($mapper);
             }
         });
+
+        $this->app->afterResolving(Dispatcher::class, function (Dispatcher $dispatcher) {
+            $dispatcher->listen(PublishingStubs::class, function (PublishingStubs $event) {
+                $event->add(__DIR__ . '/../resources/stubs/entity.stub', 'entity.stub');
+                $event->add(__DIR__ . '/../resources/stubs/mapper.entity.connection.stub', 'entity.stub');
+                $event->add(__DIR__ . '/../resources/stubs/mapper.entity.identity.stub', 'entity.stub');
+                $event->add(__DIR__ . '/../resources/stubs/mapper.entity.stub', 'entity.stub');
+                $event->add(__DIR__ . '/../resources/stubs/mapper.entity.table.stub', 'entity.stub');
+            });
+        });
+    }
+
+    public function boot(): void
+    {
+        $this->commands([
+            MakeMapperCommand::class,
+            MakeEntityCommand::class,
+        ]);
     }
 }

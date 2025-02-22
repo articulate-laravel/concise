@@ -1,0 +1,53 @@
+<?php
+
+namespace {{ namespace }};
+
+use Articulate\Concise\EntityMapper;
+
+/**
+ * @extends \Articulate\Concise\EntityMapper<{{ entityClass }}>
+ */
+class {{ class }}Mapper extends EntityMapper
+{
+    /**
+     * Get the class name this mapper represents.
+     *
+     * Returns the fully qualified class name of the object that this mapper is
+     * mapping.
+     *
+     * @return class-string<{{ entityClass }}>
+     */
+    public function class(): string
+    {
+        return {{ entityClass }}::class;
+    }
+
+    /**
+     * Convert a raw array to an object representation.
+     *
+     * @param array<string, mixed> $data
+     *
+     * @return object
+     *
+     * @phpstan-return {{ entityClass }}
+     */
+    public function toObject(array $data): object
+    {
+        return new {{ entityClass }}();
+    }
+
+    /**
+     * Convert an object representation to raw data.
+     *
+     * @param object            $object
+     *
+     * @phpstan-param {{ entityClass }} $object
+     *
+     * @return array<string, mixed>
+     */
+    public function toData(object $object): array
+    {
+        return [];
+    }
+    {{ extraMethods }}
+}

@@ -1,0 +1,25 @@
+<?php
+
+namespace {{ namespace }};
+
+class {{ class }}
+{
+    private int ${{ identity }};
+
+    public function get{{ identityCamel }}(): int
+    {
+        return $this->{{ identity }};
+    }
+
+    public function has{{ identityCamel }}(): bool
+    {
+        return isset($this->{{ identity }});
+    }
+
+    public function set{{ identityCamel }}(int ${{ identity }}): self
+    {
+        $this->{{ identity }} = ${{ identity }};
+
+        return $this;
+    }
+}

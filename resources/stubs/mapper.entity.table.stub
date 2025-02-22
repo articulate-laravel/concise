@@ -1,0 +1,9 @@
+    /**
+     * Get the entities' database table
+     *
+     * @return string
+     */
+    public function table(): string
+    {
+        return '{{ table }}';
+    }
