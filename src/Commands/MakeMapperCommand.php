@@ -93,17 +93,18 @@ class MakeMapperCommand extends GeneratorCommand
         if ($this->option('component')) {
             $fqn = 'App\\Components\\' . $this->argument('class');
         } else {
-            $fqn = 'App\\Entities\\' .  $this->argument('class');
+            $fqn = 'App\\Entities\\' . $this->argument('class');
         }
 
+        /** @var array<string, string> $replacements */
         $replacements = [
             '{{ extraMethods }}'   => $this->buildExtraMethods($identity, $table, $connection),
             '{{ class }}'          => $this->argument('name'),
             '{{ entityClass }}'    => $fqn,
             '{{ componentClass }}' => $fqn,
-            '{{ identity }}'       => $identity,
-            '{{ table }}'          => $table,
-            '{{ connection }}'     => $connection,
+            '{{ identity }}'       => $identity ?? '',
+            '{{ table }}'          => $table ?? '',
+            '{{ connection }}'     => $connection ?? '',
         ];
 
         return str_replace(
