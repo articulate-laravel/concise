@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Articulate\Concise\Support\MapperDiscovery;
+use Articulate\_OLDConcise\Support\MapperDiscovery;
 use Illuminate\Support\ServiceProvider;
 
 class WorkbenchServiceProvider extends ServiceProvider
@@ -12,7 +12,6 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        MapperDiscovery::noDefaults();
     }
 
     /**
