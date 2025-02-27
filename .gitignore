@@ -3,3 +3,4 @@ composer.lock
 /wiki/
 /build/
 .phpunit.result.cache
+/src/_OLD/
