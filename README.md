@@ -1,4 +1,4 @@
-<img src="articulate.png" width="100%">
+<img src="concise.png">
 
 ![Packagist Version](https://img.shields.io/packagist/v/articulate/concise)
 ![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/articulate/concise)
